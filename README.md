@@ -3,7 +3,7 @@ Referencias utilizadas:
 
 ## **Speedtest com Prometheus e Grafana:**
 
-![Alt Text](screen/speedtest-grafana.jpg)
+![Alt Text](screens/speedtest-grafana.jpg)
 
 https://github.com/sivel/speedtest-cli
 <br>
