@@ -51,7 +51,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "DATASOURCE_HOST",
+          "datasource": "Prometheus",
           "description": "speed test",
           "fill": 1,
           "id": 1,
