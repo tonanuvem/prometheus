@@ -9,4 +9,4 @@ RUN pip install prometheus-client
 COPY run-speedtest.py /app/
 WORKDIR /app
 EXPOSE 9104
-ENTRYPOINT ["python", "run-speedtest.py"]
+ENTRYPOINT ["python","-u","run-speedtest.py"]
