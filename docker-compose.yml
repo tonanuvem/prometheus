@@ -11,7 +11,9 @@ volumes:
 services:
 
   speedtest:
-    image: madandroid/speedtest-cli-exporter
+    build: 
+      context: .
+      dockerfile: ./speedtest/Dockerfile
     container_name: speedtest
     restart: unless-stopped
     expose:
