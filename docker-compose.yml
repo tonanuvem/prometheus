@@ -16,7 +16,7 @@ services:
     container_name: speedtest
     restart: unless-stopped
     expose:
-      - 9094
+      - 9104
     networks:
       - monitor-net
     labels:
