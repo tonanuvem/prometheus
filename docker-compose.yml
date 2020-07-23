@@ -10,6 +10,17 @@ volumes:
 
 services:
 
+  speedtest:
+    image: prom/prometheus:v2.19.2
+    container_name: speedtest
+    restart: unless-stopped
+    expose:
+      - 9094
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+      
   prometheus:
     image: prom/prometheus:v2.19.2
     container_name: prometheus
