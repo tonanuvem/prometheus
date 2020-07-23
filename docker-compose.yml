@@ -12,8 +12,7 @@ services:
 
   speedtest:
     build: 
-      context: .
-      dockerfile: ./speedtest/Dockerfile
+      context: ./speedtest
     container_name: speedtest
     restart: unless-stopped
     expose:
