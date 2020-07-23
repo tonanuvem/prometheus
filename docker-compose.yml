@@ -11,7 +11,7 @@ volumes:
 services:
 
   speedtest:
-    image: prom/prometheus:v2.19.2
+    image: madandroid/speedtest-cli-exporter
     container_name: speedtest
     restart: unless-stopped
     expose:
