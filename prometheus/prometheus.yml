@@ -34,6 +34,11 @@ scrape_configs:
     static_configs:
       - targets: ['pushgateway:9091']
 
+  - job_name: 'speedtest'
+    scrape_interval: 60s
+    honor_labels: true
+    static_configs:
+      - targets: ['speedtest:9094']
 
 alerting:
   alertmanagers:
