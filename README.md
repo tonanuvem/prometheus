@@ -1,4 +1,12 @@
-dockprom
+Referencias utilizadas: 
+========
+
+https://github.com/sivel/speedtest-cli
+https://github.com/wdstorer/speedtest-exporter
+https://hub.docker.com/r/madandroid/speedtest-cli-exporter
+
+
+Baseado em : dockprom (stefanprodan/dockprom)
 ========
 
 A monitoring solution for Docker hosts and containers with [Prometheus](https://prometheus.io/), [Grafana](http://grafana.org/), [cAdvisor](https://github.com/google/cadvisor),
