@@ -2,9 +2,13 @@ Referencias utilizadas:
 ========
 
 https://github.com/sivel/speedtest-cli
-https://github.com/wdstorer/speedtest-exporter
-https://hub.docker.com/r/madandroid/speedtest-cli-exporter
+<br>
 
+https://github.com/wdstorer/speedtest-exporter
+<br>
+
+https://hub.docker.com/r/madandroid/speedtest-cli-exporter
+<br>
 
 Baseado em : dockprom (stefanprodan/dockprom)
 ========
