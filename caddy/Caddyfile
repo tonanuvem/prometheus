@@ -1,6 +1,6 @@
-:9094 {
+:9104 {
     basicauth / {$ADMIN_USER} {$ADMIN_PASSWORD}
-    proxy / speedtest:9094 {
+    proxy / speedtest:9104 {
             transparent
         }
 
