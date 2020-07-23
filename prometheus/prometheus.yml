@@ -38,7 +38,7 @@ scrape_configs:
     scrape_interval: 60s
     honor_labels: true
     static_configs:
-      - targets: ['speedtest:9094']
+      - targets: ['speedtest:9104']
 
 alerting:
   alertmanagers:
