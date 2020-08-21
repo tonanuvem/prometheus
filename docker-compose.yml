@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3'
 
 networks:
   monitor-net:
@@ -15,8 +15,8 @@ services:
       context: ./speedtest
     container_name: speedtest
     restart: unless-stopped
-    expose:
-      - 9104
+    ports:
+      - 9104:9104
     networks:
       - monitor-net
     labels:
@@ -36,8 +36,8 @@ services:
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
     restart: unless-stopped
-    expose:
-      - 9090
+    ports:
+      - 9090:9090
     networks:
       - monitor-net
     labels:
@@ -52,8 +52,8 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
     restart: unless-stopped
-    expose:
-      - 9093
+    ports:
+      - 9093:9093
     networks:
       - monitor-net
     labels:
@@ -72,7 +72,7 @@ services:
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
     restart: unless-stopped
-    expose:
+    ports:
       - 9100
     networks:
       - monitor-net
@@ -80,7 +80,7 @@ services:
       org.label-schema.group: "monitoring"
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.37.0
+    image: braingamer/cadvisor-arm # gcr.io/cadvisor/cadvisor:v0.37.0
     container_name: cadvisor
     volumes:
       - /:/rootfs:ro
@@ -107,40 +107,40 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
     restart: unless-stopped
-    expose:
-      - 3000
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  pushgateway:
-    image: prom/pushgateway:v1.2.0
-    container_name: pushgateway
-    restart: unless-stopped
-    expose:
-      - 9091
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  caddy:
-    image: stefanprodan/caddy
-    container_name: caddy
     ports:
-      - "3000:3000"
-      - "9090:9090"
-      - "9093:9093"
-      - "9091:9091"
-      - "9104:9104"
-    volumes:
-      - ./caddy:/etc/caddy
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-    restart: unless-stopped
+      - 3000:3000
     networks:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+#  pushgateway:
+#    image: prom/pushgateway:v1.2.0
+#    container_name: pushgateway
+#    restart: unless-stopped
+#    expose:
+#      - 9091
+#    networks:
+#      - monitor-net
+#    labels:
+#      org.label-schema.group: "monitoring"
+
+#  caddy:
+#    image: caddy:alpine # stefanprodan/caddy
+#    container_name: caddy
+#    ports:
+#      - "3000:3000"
+#      - "9090:9090"
+#      - "9093:9093"
+#      - "9091:9091"
+#      - "9104:9104"
+#    volumes:
+#      - ./caddy:/etc/caddy
+#    environment:
+#      - ADMIN_USER=${ADMIN_USER:-admin}
+#      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+#    restart: unless-stopped
+#    networks:
+#      - monitor-net
+#    labels:
+#      org.label-schema.group: "monitoring"
