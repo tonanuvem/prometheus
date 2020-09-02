@@ -1,6 +1,6 @@
 {
   "id": null,
-  "title": "Python Speed Test",
+  "title": "Processos (Python)",
   "description": "Python exporter metrics",
   "tags": [
     "python"
@@ -61,7 +61,7 @@
               "hide": false,
               "interval": "",
               "intervalFactor": 10,
-              "legendFormat": "python_gc_objects_collected_total",
+              "legendFormat": "{{job}}",
               "metric": "",
               "refId": "B",
               "step": 10
@@ -143,7 +143,7 @@
               "expr": "process_virtual_memory_bytes",
               "interval": "",
               "intervalFactor": 2,
-              "legendFormat": "{{state}}",
+              "legendFormat": "{{job}}",
               "metric": "",
               "refId": "A",
               "step": 2
