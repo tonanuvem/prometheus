@@ -1,9 +1,9 @@
 {
   "id": null,
-  "title": "Nginx",
-  "description": "Nginx exporter metrics",
+  "title": "Python Speed Test",
+  "description": "Python exporter metrics",
   "tags": [
-    "nginx"
+    "python"
   ],
   "style": "dark",
   "timezone": "browser",
@@ -57,11 +57,11 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(irate(nginx_connections_processed_total{stage=\"any\"}[5m])) by (stage)",
+              "expr": "python_gc_objects_collected_total",
               "hide": false,
               "interval": "",
               "intervalFactor": 10,
-              "legendFormat": "requests",
+              "legendFormat": "python_gc_objects_collected_total",
               "metric": "",
               "refId": "B",
               "step": 10
@@ -69,7 +69,7 @@
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Requests/sec",
+          "title": "python_gc_objects_collected_total",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -140,7 +140,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(nginx_connections_current) by (state)",
+              "expr": "process_virtual_memory_bytes",
               "interval": "",
               "intervalFactor": 2,
               "legendFormat": "{{state}}",
@@ -151,7 +151,7 @@
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Connections",
+          "title": "process_virtual_memory_bytes",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -222,11 +222,11 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(irate(nginx_connections_processed_total{stage!=\"any\"}[5m])) by (stage)",
+              "expr": "process_resident_memory_bytes",
               "hide": false,
               "interval": "",
               "intervalFactor": 10,
-              "legendFormat": "{{stage}}",
+              "legendFormat": "process_resident_memory_bytes",
               "metric": "",
               "refId": "B",
               "step": 10
@@ -234,7 +234,7 @@
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Connections rate",
+          "title": "process_resident_memory_bytes",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -265,7 +265,7 @@
           ]
         }
       ],
-      "title": "Nginx exporter metrics"
+      "title": "Python exporter metrics"
     },
     {
       "collapse": false,
@@ -312,16 +312,16 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(container_cpu_usage_seconds_total{name=~\"nginx\"}[5m])) / count(node_cpu_seconds_total{mode=\"system\"}) * 100",
+              "expr": "process_start_time_seconds",
               "intervalFactor": 2,
-              "legendFormat": "nginx",
+              "legendFormat": "process_start_time_seconds",
               "refId": "A",
               "step": 2
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "CPU usage",
+          "title": "process_start_time_seconds",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -352,7 +352,7 @@
           ]
         }
       ],
-      "title": "Nginx container metrics"
+      "title": "Python container metrics"
     }
   ],
   "time": {
