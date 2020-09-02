@@ -226,7 +226,7 @@
               "hide": false,
               "interval": "",
               "intervalFactor": 10,
-              "legendFormat": "process_resident_memory_bytes",
+              "legendFormat": "{{job}}",
               "metric": "",
               "refId": "B",
               "step": 10
@@ -312,16 +312,16 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "process_start_time_seconds",
+              "expr": "process_cpu_seconds_total",
               "intervalFactor": 2,
-              "legendFormat": "process_start_time_seconds",
+              "legendFormat": "{{job}}",
               "refId": "A",
               "step": 2
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "process_start_time_seconds",
+          "title": "process_cpu_seconds_total",
           "tooltip": {
             "msResolution": false,
             "shared": true,
