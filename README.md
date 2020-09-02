@@ -31,6 +31,10 @@ git clone https://github.com/tonanuvem/prometheus
 cd prometheus
 
 ADMIN_USER=admin ADMIN_PASSWORD=admin docker-compose up -d
+
+../ip
+
+http://ip:3000
 ```
 
 Prerequisites:
