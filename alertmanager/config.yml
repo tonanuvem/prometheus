@@ -8,4 +8,4 @@ receivers:
             text: "{{ .CommonAnnotations.description }}"
             username: 'Prometheus'
             channel: '#lab-monitoracao'
-            api_url: 'https://hooks.slack.com/services/<webhook-id>'
+            api_url: 'inserir_webhook'
