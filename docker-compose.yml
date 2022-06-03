@@ -146,7 +146,7 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-
+# LOKI stack abaixo:
 
   read:
     image: grafana/loki:2.5.0
@@ -160,7 +160,7 @@ services:
     depends_on:
       - minio
     networks: &loki-dns
-      loki:
+      monitor-net:
         aliases:
           - monitor-net
 
