@@ -98,7 +98,7 @@ services:
       org.label-schema.group: "monitoring"
 
   grafana:
-    image: grafana/grafana:7.0.6
+    image: grafana/grafana:latest
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
@@ -150,6 +150,7 @@ services:
 
   read:
     image: grafana/loki:2.5.0
+    container_name: loki
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
       - 3101:3100
@@ -166,6 +167,7 @@ services:
 
   write:
     image: grafana/loki:2.5.0
+    container_name: loki-write
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
       - 3102:3100
@@ -180,6 +182,7 @@ services:
 
   promtail:
     image: grafana/promtail:2.5.0
+    container_name: loki-promtail
     volumes:
       - ./promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -191,6 +194,7 @@ services:
 
   minio:
     image: minio/minio
+    container_name: loki-minio
     entrypoint:
       - sh
       - -euc
@@ -213,6 +217,7 @@ services:
 
   gateway:
     image: nginx:latest
+    container_name: loki-gateway
     depends_on:
       - read
       - write
@@ -277,6 +282,7 @@ services:
 
   flog:
     image: mingrammer/flog
+    container_name: log-generator-flog
     command: -f json -d 1s -l
     networks:
       - monitor-net
