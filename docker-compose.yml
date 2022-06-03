@@ -150,7 +150,7 @@ services:
 
   read:
     image: grafana/loki:2.5.0
-    container_name: loki
+    container_name: loki-read
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
       - 3101:3100
@@ -161,12 +161,10 @@ services:
     depends_on:
       - minio
     networks: &loki-dns
-      monitor-net:
+      loki:
         aliases:
           - monitor-net
-    labels:
-      org.label-schema.group: "logging"
-     
+
   write:
     image: grafana/loki:2.5.0
     container_name: loki-write
@@ -181,12 +179,10 @@ services:
       - minio
     networks:
       <<: *loki-dns
-    labels:
-      org.label-schema.group: "logging"
-     
+
   promtail:
     image: grafana/promtail:2.5.0
-    container_name: loki-promtail
+    container_name: promtail
     volumes:
       - ./loki/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -195,12 +191,10 @@ services:
       - gateway
     networks:
       - monitor-net
-    labels:
-      org.label-schema.group: "logging"
-     
+
   minio:
     image: minio/minio
-    container_name: loki-minio
+    container_name: minio
     entrypoint:
       - sh
       - -euc
@@ -214,14 +208,12 @@ services:
       - MINIO_PROMETHEUS_AUTH_TYPE=public
       - MINIO_UPDATE=off
     ports:
-      - 9900
+      - 9000
     volumes:
       - ./.data/minio:/data
     networks:
       - monitor-net
-    labels:
-      org.label-schema.group: "logging"
-     
+
   gateway:
     image: nginx:latest
     container_name: loki-gateway
@@ -283,17 +275,12 @@ services:
         EOF
         /docker-entrypoint.sh nginx -g "daemon off;"
     ports:
-      - 3100:3100
+      - "3100:3100"
     networks:
       - monitor-net
-    labels:
-      org.label-schema.group: "logging"
-      
+
   flog:
     image: mingrammer/flog
-    container_name: log-generator-flog
     command: -f json -d 1s -l
     networks:
       - monitor-net
-    labels:
-      org.label-schema.group: "logging"
