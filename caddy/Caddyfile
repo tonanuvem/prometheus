@@ -47,3 +47,13 @@
     errors stderr
     tls off
 }
+
+:3100 {
+    proxy / gateway:3100 {
+            transparent
+            websocket
+        }
+
+    errors stderr
+    tls off
+}
