@@ -1,197 +1,53 @@
-version: '3'
+---
+version: "3"
 
 networks:
-  monitor-net:
-
-volumes:
-    prometheus_data: {}
-    grafana_data: {}
+  loki:
 
 services:
-
-  speedtest:
-    build: 
-      context: ./speedtest
-    container_name: speedtest
-    restart: unless-stopped
-    expose:
-      - 9104
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-      
-  prometheus:
-    image: prom/prometheus:v2.19.2
-    container_name: prometheus
-    volumes:
-      - ./prometheus:/etc/prometheus
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
-    restart: unless-stopped
-    expose:
-      - 9090
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  alertmanager:
-    image: prom/alertmanager:v0.21.0
-    container_name: alertmanager
-    volumes:
-      - ./alertmanager:/etc/alertmanager
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-      - '--storage.path=/alertmanager'
-    restart: unless-stopped
-    expose:
-      - 9093
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  nodeexporter:
-    image: prom/node-exporter:v1.0.1
-    container_name: nodeexporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
-    expose:
-      - 9100
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  cadvisor:
-    image: google/cadvisor
-#    image: gcr.io/cadvisor/cadvisor:v0.37.0
-    container_name: cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker:/var/lib/docker:ro
-      #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
-    restart: unless-stopped
-    expose:
-      - 8080
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
-    environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-      - GF_USERS_ALLOW_SIGN_UP=false
-    restart: unless-stopped
-    expose:
-      - 3000
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  pushgateway:
-    image: prom/pushgateway:v1.2.0
-    container_name: pushgateway
-    restart: unless-stopped
-    expose:
-      - 9091
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  caddy:
-    image: stefanprodan/caddy
-    container_name: caddy
-    ports:
-      - "3000:3000"
-      - "9090:9090"
-      - "9093:9093"
-      - "9091:9091"
-      - "9104:9104"
-    volumes:
-      - ./caddy:/etc/caddy
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-    restart: unless-stopped
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-# LOKI stack abaixo:
-
   read:
     image: grafana/loki:2.5.0
-    container_name: loki-read
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
-      - "3101:3100"
+      - 3101:3100
       - 7946
       - 9095
     volumes:
-      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+      - ./loki-config.yaml:/etc/loki/config.yaml
     depends_on:
       - minio
-    networks:
-      - monitor-net
+    networks: &loki-dns
+      loki:
+        aliases:
+          - loki
 
   write:
     image: grafana/loki:2.5.0
-    container_name: loki-write
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
-      - "3102:3100"
+      - 3102:3100
       - 7946
       - 9095
     volumes:
-      - ./loki/loki-config.yaml:/etc/loki/config.yaml
+      - ./loki-config.yaml:/etc/loki/config.yaml
     depends_on:
       - minio
     networks:
-      - monitor-net
+      <<: *loki-dns
 
   promtail:
     image: grafana/promtail:2.5.0
-    container_name: promtail
     volumes:
-      - ./loki/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
+      - ./promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
     command: -config.file=/etc/promtail/config.yaml
     depends_on:
       - gateway
     networks:
-      - monitor-net
+      - loki
 
   minio:
     image: minio/minio
-    container_name: minio
     entrypoint:
       - sh
       - -euc
@@ -209,11 +65,25 @@ services:
     volumes:
       - ./.data/minio:/data
     networks:
-      - monitor-net
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    depends_on:
+      - gateway
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    networks:
+      - loki
 
   gateway:
     image: nginx:latest
-    container_name: loki-gateway
     depends_on:
       - read
       - write
@@ -224,46 +94,36 @@ services:
         cat <<EOF > /etc/nginx/nginx.conf
         user  nginx;
         worker_processes  5;  ## Default: 1
-
         events {
           worker_connections   1000;
         }
-
         http {
           resolver 127.0.0.11;
-
           server {
             listen             3100;
-
             location = / {
               return 200 'OK';
               auth_basic off;
             }
-
             location = /api/prom/push {
               proxy_pass       http://write:3100\$$request_uri;
             }
-
             location = /api/prom/tail {
               proxy_pass       http://read:3100\$$request_uri;
               proxy_set_header Upgrade \$$http_upgrade;
               proxy_set_header Connection "upgrade";
             }
-
             location ~ /api/prom/.* {
               proxy_pass       http://read:3100\$$request_uri;
             }
-
             location = /loki/api/v1/push {
               proxy_pass       http://write:3100\$$request_uri;
             }
-
             location = /loki/api/v1/tail {
               proxy_pass       http://read:3100\$$request_uri;
               proxy_set_header Upgrade \$$http_upgrade;
               proxy_set_header Connection "upgrade";
             }
-
             location ~ /loki/api/.* {
               proxy_pass       http://read:3100\$$request_uri;
             }
@@ -274,10 +134,10 @@ services:
     ports:
       - "3100:3100"
     networks:
-      - monitor-net
+      - loki
 
   flog:
     image: mingrammer/flog
     command: -f json -d 1s -l
     networks:
-      - monitor-net
+      - loki
