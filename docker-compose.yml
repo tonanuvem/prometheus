@@ -283,8 +283,8 @@ services:
         }
         EOF
         /docker-entrypoint.sh nginx -g "daemon off;"
-    ports:
-      - "3100:3100"
+    expose:
+      - 3100
     networks:
       - monitor-net
     labels:
