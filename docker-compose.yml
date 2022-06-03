@@ -188,7 +188,7 @@ services:
     image: grafana/promtail:2.5.0
     container_name: loki-promtail
     volumes:
-      - ./promtail-local-config.yaml:/etc/promtail/config.yaml:ro
+      - ./loki/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
     command: -config.file=/etc/promtail/config.yaml
     depends_on:
