@@ -135,7 +135,6 @@ services:
       - "9093:9093"
       - "9091:9091"
       - "9104:9104"
-      - "3100:3100"
     volumes:
       - ./caddy:/etc/caddy
     environment:
@@ -283,8 +282,8 @@ services:
         }
         EOF
         /docker-entrypoint.sh nginx -g "daemon off;"
-    expose:
-      - 3100
+    ports:
+      - 3100:3100
     networks:
       - monitor-net
     labels:
