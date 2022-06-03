@@ -153,7 +153,7 @@ services:
     container_name: loki-read
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
-      - 3101:3100
+      - "3101:3100"
       - 7946
       - 9095
     volumes:
@@ -168,7 +168,7 @@ services:
     container_name: loki-write
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
-      - 3102:3100
+      - "3102:3100"
       - 7946
       - 9095
     volumes:
