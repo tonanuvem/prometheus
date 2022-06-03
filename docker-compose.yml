@@ -164,7 +164,9 @@ services:
       monitor-net:
         aliases:
           - monitor-net
-
+    labels:
+      org.label-schema.group: "logging"
+     
   write:
     image: grafana/loki:2.5.0
     container_name: loki-write
@@ -179,7 +181,9 @@ services:
       - minio
     networks:
       <<: *loki-dns
-
+    labels:
+      org.label-schema.group: "logging"
+     
   promtail:
     image: grafana/promtail:2.5.0
     container_name: loki-promtail
@@ -191,7 +195,9 @@ services:
       - gateway
     networks:
       - monitor-net
-
+    labels:
+      org.label-schema.group: "logging"
+     
   minio:
     image: minio/minio
     container_name: loki-minio
@@ -213,8 +219,9 @@ services:
       - ./.data/minio:/data
     networks:
       - monitor-net
-
-
+    labels:
+      org.label-schema.group: "logging"
+     
   gateway:
     image: nginx:latest
     container_name: loki-gateway
@@ -279,10 +286,14 @@ services:
       - "3100:3100"
     networks:
       - monitor-net
-
+    labels:
+      org.label-schema.group: "logging"
+      
   flog:
     image: mingrammer/flog
     container_name: log-generator-flog
     command: -f json -d 1s -l
     networks:
       - monitor-net
+    labels:
+      org.label-schema.group: "logging"
