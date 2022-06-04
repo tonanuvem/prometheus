@@ -25,30 +25,30 @@ g_upload = Gauge('upload_speed', 'Upload speed')
 def process_request(t):
   s.get_servers(servers)
   s.get_best_server()
-  logging.warning("\tAplicacao Speed Test selecionou SERVIDORES para efetuar os testes de velocidade")
+  logging.warning("Aplicacao Speed Test selecionou SERVIDORES para efetuar os testes de velocidade")
   s.download()
-  logging.warning("\tAplicacao Speed Test fez testes de velocidade de DOWNLOAD")
+  logging.warning("Aplicacao Speed Test fez testes de velocidade de DOWNLOAD")
   s.upload()
-  logging.warning("\tAplicacao Speed Test fez testes de velocidade de UPLOAD")
+  logging.warning("Aplicacao Speed Test fez testes de velocidade de UPLOAD")
   results_dict = s.results.dict()
   g_download.set(results_dict["download"])
   g_upload.set(results_dict["upload"])
-  print("upload: %s" % (results_dict["upload"]))
-  print("download: %s" % (results_dict["download"]))
+  print("\tupload: %s" % (results_dict["upload"]))
+  print("\tdownload: %s" % (results_dict["download"]))
   time.sleep(t)
   
 if __name__ == '__main__':
   # Start up the server to expose the metrics.
-  logging.warning("\tAplicacao Speed Test foi iniciada")
+  logging.warning("Aplicacao Speed Test foi iniciada")
   start_http_server(9104) 
   # Generate some requests.
   while True:
     try:
       process_request(test_interval)
-      logging.warning("\tSpeed Test logou as velocidades")
+      logging.warning("Speed Test logou as velocidades")
     except TypeError:
       print("TypeError returned from speedtest server")
-      logging.error("\tSpeed Test except TypeError")
+      logging.error("Speed Test except TypeError")
     except socket.timeout:
       print("socket.timeout returned from speedtest server")
-      logging.error("\tSpeed Test except socket.timeout")
+      logging.error("Speed Test except socket.timeout")
