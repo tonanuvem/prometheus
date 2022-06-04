@@ -16,6 +16,9 @@ services:
       - "9104:9104"
     networks:
       - monitor-net
+    environment: 
+      # Exibe comandos de "print" no LOG
+      - PYTHONUNBUFFERED=1
     labels:
       org.label-schema.group: "monitoring"
       
