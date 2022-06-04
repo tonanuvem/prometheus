@@ -3,6 +3,7 @@
 import speedtest
 import time
 from prometheus_client import start_http_server, Summary, Gauge
+import logging
 
 servers = []
 # If you want to test against a specific server
@@ -29,12 +30,16 @@ def process_request(t):
   
 if __name__ == '__main__':
   # Start up the server to expose the metrics.
+  logging.warning("Aplicacao Speed Test foi iniciada")
   start_http_server(9104) 
   # Generate some requests.
   while True:
     try:
       process_request(test_interval)
+      logging.warning("\tSpeed Test logou as velocidades")
     except TypeError:
       print("TypeError returned from speedtest server")
+      logging.error("\tSpeed Test except TypeError")
     except socket.timeout:
       print("socket.timeout returned from speedtest server")
+      logging.error("\tSpeed Test except socket.timeout")
