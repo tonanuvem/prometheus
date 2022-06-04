@@ -96,6 +96,7 @@ services:
 
   read:
     image: grafana/loki:2.5.0
+    container_name: loki-read
     command: "-config.file=/etc/loki/config.yaml -target=read"
     ports:
       - 3101:3100
@@ -112,6 +113,7 @@ services:
 
   write:
     image: grafana/loki:2.5.0
+    container_name: loki-write
     command: "-config.file=/etc/loki/config.yaml -target=write"
     ports:
       - 3102:3100
@@ -126,6 +128,7 @@ services:
 
   promtail:
     image: grafana/promtail:2.5.0
+    container_name: loki-promtail
     volumes:
       - ./loki/promtail-local-config.yaml:/etc/promtail/config.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
@@ -137,6 +140,7 @@ services:
 
   minio:
     image: minio/minio
+    container_name: loki-minio
     entrypoint:
       - sh
       - -euc
@@ -158,6 +162,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
+    container_name: grafana
     environment:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -176,6 +181,7 @@ services:
       
   gateway:
     image: nginx:latest
+    container_name: loki-gateway
     depends_on:
       - read
       - write
@@ -230,6 +236,7 @@ services:
 
   flog:
     image: mingrammer/flog
+    container_name: loki-log-generator-flog
     command: -f json -d 1s -l
     networks:
       - loki
