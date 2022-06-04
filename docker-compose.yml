@@ -11,7 +11,6 @@ services:
     build: 
       context: ./speedtest
     container_name: speedtest
-    restart: unless-stopped
     ports:
       - "9104:9104"
     networks:
@@ -34,7 +33,6 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=200h'
       - '--web.enable-lifecycle'
-    restart: unless-stopped
     ports:
       - "9090:9090"
     networks:
@@ -50,7 +48,6 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
-    restart: unless-stopped
     expose:
       - 9093
     networks:
@@ -70,7 +67,6 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
     expose:
       - 9100
     networks:
@@ -86,7 +82,6 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker:/var/lib/docker:ro
-    restart: unless-stopped
     expose:
       - 8080
     networks:
