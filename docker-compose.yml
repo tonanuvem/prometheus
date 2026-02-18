@@ -59,8 +59,8 @@ services:
     ports:
       - "8080:8080"
     mem_limit: 256m
-    command:
-      - --docker_only=true
+    # command:
+    #   - --docker_only=true
 
   grafana:
     image: grafana/grafana:10.2.3
