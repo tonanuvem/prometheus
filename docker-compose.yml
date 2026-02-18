@@ -59,8 +59,10 @@ services:
     ports:
       - "8080:8080"
     mem_limit: 256m
-    # command:
-    #   - --docker_only=true
+    command:
+      - --docker_only=true
+      - --store_container_labels=true    # garante que labels dos containers sejam exportados no container_info
+      - --whitelisted_container_labels=  # deixe vazio para exportar todos os labels, ou liste os que quer
 
   grafana:
     image: grafana/grafana:10.2.3
